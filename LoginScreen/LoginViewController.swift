@@ -9,20 +9,20 @@ import UIKit
 
 class LoginViewController: UIViewController, UITextFieldDelegate {
     
-    @IBOutlet weak var userNameTextField: UITextField!
-    @IBOutlet weak var passwordTextField: UITextField!
+    // MARK: - IBOutlets declaration
     
-    @IBOutlet weak var commonStackView: UIStackView!
-    
-    @IBOutlet weak var logInButton: UIButton!
-    
+    @IBOutlet var userNameTextField: UITextField!
+    @IBOutlet var passwordTextField: UITextField!
+        
     @IBOutlet var forgottenNameButton: UIView!
-    @IBOutlet weak var forgottenPasswordButton: UIButton!
+    @IBOutlet var forgottenPasswordButton: UIButton!
     
-  
+    // MARK: - Private properties declaration
     
-    let userName = "user"
-    let password = "password"
+    private let userName = "user"
+    private let password = "password"
+    
+    // MARK: - Override methods
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -34,15 +34,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         
         userNameTextField.returnKeyType = .next
         passwordTextField.returnKeyType = .done
-        
-        textFieldShouldReturn(userNameTextField)
-        
-        
-        
-//        NotificationCenter.default.addObserver(self,
-//                                               selector: #selector(updateStackView(notification:)),
-//                                               name: UIResponder.keyboardWillShowNotification,
-//                                               object: nil)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -54,13 +45,21 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                 message: "Please enter correct your personal data")
             return
         }
-        welcomeVC.userName = "Welcome, \(userName)"
+        welcomeVC.greetings = "Welcome, \(userName)"
     }
     
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesBegan(touches, with: event)
+        view.endEditing(true)
+    }
+    
+    // MARK: - IBActions
+    
     @IBAction func unwind(for segue: UIStoryboardSegue) {
-        guard let _ = segue.source as? WelcomeViewController else { return }
         userNameTextField.text = ""
         passwordTextField.text = ""
+        userNameTextField.becomeFirstResponder()
+        passwordTextField.resignFirstResponder()
     }
     
     @IBAction func forgotNameButtonTapped() {
@@ -71,38 +70,22 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         showAlert(title: "Hey, User!", message: "Your password is \(password)")
     }
     
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        super.touchesBegan(touches, with: event)
-        view.endEditing(true)
-    }
+    // MARK: - Public methods
     
-//    @objc func updateStackView(notification: Notification) {
-//        guard
-//            let userInfo = notification.userInfo as? [String: Any],
-//            let keyboardFrame = (userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue
-//        else { return }
-//
-//        if notification.name == UIResponder.keyboardWillHideNotification {
-//            commonStackView.frame.origin.y += 10
-//        } else {
-//            commonStackView.frame.origin.y = keyboardFrame.height - 10
-//        }
-//    }
-    
-    func textFieldShouldReturn(_ firstTextField: UITextField) -> Bool {
-        passwordTextField.becomeFirstResponder()
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        if textField == userNameTextField {
+            passwordTextField.becomeFirstResponder()
+        } else { performSegue(withIdentifier: "welcomeVC", sender: nil)
+              }
         return true }
-    
-    
-   
 }
 
+    //MARK: - Extensions
 
 extension LoginViewController {
     private func showAlert(title: String, message: String) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         let okAction = UIAlertAction(title: "OK", style: .default) { _ in
-            self.userNameTextField.text = ""
             self.passwordTextField.text = ""
         }
         alert.addAction(okAction)
