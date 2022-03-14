@@ -8,7 +8,7 @@
 import UIKit
 
 public struct MainInformation {
-    let name: String!
+    let realName: String!
     let dateOfBirth: String!
     let userLocation: String!
     let userPhotoName: String!
@@ -16,7 +16,7 @@ public struct MainInformation {
     let password: String!
     
     static func getInformation() -> MainInformation {
-        return MainInformation(name: "Kovalyov Dmitriy",
+        return MainInformation(realName: "Kovalyov Dmitriy",
                                dateOfBirth: "08.30.1993",
                                userLocation: "Khabarovsk",
                                userPhotoName: "myPhoto",
