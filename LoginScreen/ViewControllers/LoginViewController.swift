@@ -13,14 +13,13 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     
     @IBOutlet var userNameTextField: UITextField!
     @IBOutlet var passwordTextField: UITextField!
-        
+    
     @IBOutlet var forgottenNameButton: UIView!
     @IBOutlet var forgottenPasswordButton: UIButton!
     
     // MARK: - Private properties declaration
     
-    private let userName = "user"
-    private let password = "password"
+    let myData = MainInformation.getInformation()
     
     // MARK: - Override methods
     
@@ -37,15 +36,15 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        guard let welcomeVC = segue.destination as? WelcomeViewController else { return }
-        guard userNameTextField.text == userName, passwordTextField.text == password
+        guard let _ = segue.destination as? WelcomeViewController else { return }
+        guard userNameTextField.text == myData.userName, passwordTextField.text == myData.password
         else {
             showAlert(
                 title: "Invalid login or password",
                 message: "Please enter correct your personal data")
             return
         }
-        welcomeVC.greetings = "Welcome, \(userName)"
+        
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -58,16 +57,17 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     @IBAction func unwind(for segue: UIStoryboardSegue) {
         userNameTextField.text = ""
         passwordTextField.text = ""
-        userNameTextField.becomeFirstResponder()
+        
         passwordTextField.resignFirstResponder()
+        userNameTextField.becomeFirstResponder()
     }
     
     @IBAction func forgotNameButtonTapped() {
-        showAlert(title: "Hey, User!", message: "Your username is \(userName)")
+        showAlert(title: "Hey, User!", message: "Your username is \(myData.userName ?? "<error>")")
     }
     
     @IBAction func forgotPasswordButtonTapped() {
-        showAlert(title: "Hey, User!", message: "Your password is \(password)")
+        showAlert(title: "Hey, User!", message: "Your password is \(myData.password ?? "<error>")")
     }
     
     // MARK: - Public methods
@@ -76,11 +76,12 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         if textField == userNameTextField {
             passwordTextField.becomeFirstResponder()
         } else { performSegue(withIdentifier: "welcomeVC", sender: nil)
-              }
+        }
         return true }
+    
 }
 
-    //MARK: - Extensions
+//MARK: - Extensions
 
 extension LoginViewController {
     private func showAlert(title: String, message: String) {
