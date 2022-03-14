@@ -12,11 +12,11 @@ class PhotoViewController: UIViewController {
     @IBOutlet var photo: UIImageView!
     
     var image: UIImage?
-    let myData = MainInformation.getInformation()
+    var user: User!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        image = UIImage(named: myData.userPhotoName ?? "person.fill")
+        image = UIImage(named: user.person.userPhotoName)
         photo.image = image
     }
     

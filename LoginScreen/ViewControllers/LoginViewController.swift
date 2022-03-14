@@ -19,7 +19,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     
     // MARK: - Private properties declaration
     
-    let myData = MainInformation.getInformation()
+    private let user = User.getUserInfo()
     
     // MARK: - Override methods
     
@@ -36,16 +36,44 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        guard let _ = segue.destination as? WelcomeViewController else { return }
-        guard userNameTextField.text == myData.userName, passwordTextField.text == myData.password
+        
+        guard let tabBarController = segue.destination as? UITabBarController else { return }
+        guard let viewControllers = tabBarController.viewControllers else { return }
+
+        for viewController in viewControllers {
+            if let welcomeVC = viewController as? WelcomeViewController {
+                welcomeVC.user = user
+            } else if let navController = viewController as? UINavigationController {
+                let mainInfoVC = navController.topViewController as? MainInformationViewController
+                mainInfoVC?.user = user
+                let photoVC = navController.topViewController as? PhotoViewController
+                photoVC?.user = user
+            }
+        }
+        
+        guard userNameTextField.text == user.userName, passwordTextField.text == user.password
         else {
             showAlert(
                 title: "Invalid login or password",
                 message: "Please enter correct your personal data")
             return
         }
+        }
         
-    }
+//        viewControllers.forEach {
+//            if let welcomeVC = $0 as? WelcomeViewController {
+//                welcomeVC.user = user
+//            } else if let navigationVC = $0 as? UINavigationController {
+//                let mainInfoVC = navigationVC.topViewController as? MainInformationViewController
+//                mainInfoVC?.user = user
+//            } else if let navigationVC = $0 as? UINavigationController {
+//                let photoVC = navigationVC.topViewController as? PhotoViewController
+//                photoVC?.user = user
+//            }
+//        }
+        
+    
+    
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesBegan(touches, with: event)
@@ -63,11 +91,11 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     }
     
     @IBAction func forgotNameButtonTapped() {
-        showAlert(title: "Hey, User!", message: "Your username is \(myData.userName ?? "<error>")")
+        showAlert(title: "Hey, User!", message: "Your username is \(user.userName )")
     }
     
     @IBAction func forgotPasswordButtonTapped() {
-        showAlert(title: "Hey, User!", message: "Your password is \(myData.password ?? "<error>")")
+        showAlert(title: "Hey, User!", message: "Your password is \(user.password )")
     }
     
     // MARK: - Public methods
@@ -78,7 +106,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         } else { performSegue(withIdentifier: "welcomeVC", sender: nil)
         }
         return true }
-    
 }
 
 //MARK: - Extensions

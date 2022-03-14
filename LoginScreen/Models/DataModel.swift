@@ -7,21 +7,40 @@
 
 import UIKit
 
-public struct MainInformation {
-    let realName: String!
-    let dateOfBirth: String!
-    let userLocation: String!
-    let userPhotoName: String!
-    let userName: String!
-    let password: String!
+struct User {
+    let userName: String
+    let password: String
+    let person: Person
     
-    static func getInformation() -> MainInformation {
-        return MainInformation(realName: "Kovalyov Dmitriy",
-                               dateOfBirth: "08.30.1993",
-                               userLocation: "Khabarovsk",
-                               userPhotoName: "myPhoto",
-                               userName: "user",
-                               password: "password"
+    static func getUserInfo() -> User {
+        User(
+            userName: "user",
+            password: "password",
+            person: Person.getPersonInfo()
+        )
+    }
+}
+
+
+struct Person {
+    let name: String
+    let surname: String
+    
+    var fullName: String {
+        "\(name) \(surname)"
+    }
+
+    let dateOfBirth: String
+    let userLocation: String
+    let userPhotoName: String
+    
+    static func getPersonInfo() -> Person {
+        Person(
+            name: "Dmitriy",
+            surname: "Kovalyov",
+            dateOfBirth: "08.30.1993",
+            userLocation: "Khabarovsk",
+            userPhotoName: "myPhoto"
         )
     }
 }

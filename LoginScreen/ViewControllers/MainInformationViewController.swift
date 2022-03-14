@@ -13,12 +13,12 @@ class MainInformationViewController: UIViewController {
     @IBOutlet var dateBirthLabel: UILabel!
     @IBOutlet var locationLabel: UILabel!
     
-    let myData = MainInformation.getInformation()
+    var user: User!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        nameLabel.text = myData.realName
-        dateBirthLabel.text = myData.dateOfBirth
-        locationLabel.text = myData.userLocation
+        nameLabel.text = user.person.fullName
+        dateBirthLabel.text = user?.person.dateOfBirth
+        locationLabel.text = user?.person.userLocation
     }
 }
